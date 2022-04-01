@@ -1,0 +1,6 @@
+[submodule "GLFW"]
+	path = lib/glfw
+	url = https://github.com/glfw/glfw
+[submodule "RapidJSON"]
+	path = lib/rapidjson
+	url = https://github.com/Tencent/rapidjson
