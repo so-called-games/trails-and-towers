@@ -1,0 +1,3 @@
+#include "winres.h"
+#include "resource.h"
+APP_ICON ICON DISCARDABLE "trails.ico"
