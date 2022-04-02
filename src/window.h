@@ -13,8 +13,8 @@
 #include "controls.h"
 #define WINDOW_SIZE 480
 #define WINDOW_TITLE_REGULAR "Trails"
-#define WINDOW_TITLE_FIRST_WIN "Blue win!"
-#define WINDOW_TITLE_SECOND_WIN "Red win!"
+#define WINDOW_TITLE_FIRST_WIN "Blue wins!"
+#define WINDOW_TITLE_SECOND_WIN "Red wins!"
 extern GLFWwindow* window;
 extern bool windowHere;
 bool windowInit();
@@ -24,4 +24,4 @@ void windowIcon(int resource);
 #endif
 void windowResize(GLFWwindow* window, int width, int height);
 void windowUpdate(GLFWwindow* window);
-void quit(int code);
+void windowQuit(int code);

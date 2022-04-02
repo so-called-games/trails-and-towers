@@ -12,6 +12,8 @@
 #define PROGRAM_FAILURE -1
 #define ERROR_GLFW_INIT "Failed to initialize GLFW library"
 #define ERROR_GLFW_WINDOW "Failed to create GLFW window"
+#define ERROR_SDL_INIT "Failed to initialize SDL library"
+#define ERROR_AUDIO_DEVICE "Failed to open audio device"
 #define TIMESTAMP_FORMAT "[. :]"
 using namespace std;
 using namespace chrono;

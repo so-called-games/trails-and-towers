@@ -3,7 +3,7 @@
 int main(int argc, char* argv[])
 {
 	if (!(windowHere = windowInit()))
-		quit(PROGRAM_FAILURE);
+		windowQuit(PROGRAM_FAILURE);
 	windowSetup();
 	drawInit();
 	fieldInit();
@@ -13,4 +13,5 @@ int main(int argc, char* argv[])
 		draw();
 		glfwPollEvents();
 	}
+	windowQuit(PROGRAM_SUCCESS);
 }

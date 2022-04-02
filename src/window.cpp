@@ -67,7 +67,7 @@ void windowUpdate(GLFWwindow* window)
 	draw();
 }
 
-void quit(int code = PROGRAM_SUCCESS)
+void windowQuit(int code = PROGRAM_SUCCESS)
 {
 	glfwTerminate();
 	exit(code);
