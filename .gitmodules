@@ -1,9 +1,6 @@
 [submodule "GLFW"]
 	path = lib/glfw
 	url = https://github.com/glfw/glfw
-[submodule "lib/sdl"]
+[submodule "SDL2"]
 	path = lib/sdl
 	url = https://github.com/libsdl-org/SDL.git
-[submodule "RapidJSON"]
-	path = lib/rapidjson
-	url = https://github.com/Tencent/rapidjson
