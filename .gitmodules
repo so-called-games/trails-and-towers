@@ -4,3 +4,6 @@
 [submodule "RapidJSON"]
 	path = lib/rapidjson
 	url = https://github.com/Tencent/rapidjson
+[submodule "lib/sdl"]
+	path = lib/sdl
+	url = https://github.com/libsdl-org/SDL.git
