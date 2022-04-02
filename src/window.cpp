@@ -10,7 +10,7 @@ bool windowInit()
 		error(ERROR_GLFW_INIT);
 		return false;
 	}
-	window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, WINDOW_TITLE, NULL, NULL);
+	window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, WINDOW_TITLE_REGULAR, NULL, NULL);
 
 	if (!window)
 	{
@@ -39,7 +39,7 @@ void windowSetup()
 #ifdef BUILD_WINDOWS
 	void windowIcon(int resource)
 	{
-		HWND hwnd = FindWindow(NULL, _T(WINDOW_TITLE));
+		HWND hwnd = FindWindow(NULL, _T(WINDOW_TITLE_REGULAR));
 		SIZE size = { GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON) };
 		HICON hIcon = static_cast<HICON>(LoadImage(GetModuleHandleW(NULL), MAKEINTRESOURCE(resource), IMAGE_ICON, size.cx, size.cy, 0));
 		SendMessage(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(hIcon));
@@ -56,9 +56,9 @@ void windowResize(GLFWwindow* window, int width, int height)
 	glLoadIdentity();
 
 	if (width >= height)
-		gluOrtho2D(-1.f * ratio, 1.f * ratio, -1.f, 1.f);
+		gluOrtho2D((-1.f - cellThickness) * ratio, (1.f + cellThickness) * ratio, -1.f - cellThickness, 1.f + cellThickness);
 	else
-		gluOrtho2D(-1.f, 1.f, -1.f / ratio, 1.f / ratio);
+		gluOrtho2D(-1.f - cellThickness, 1.f + cellThickness, (-1.f - cellThickness) / ratio, (1.f + cellThickness) / ratio);
 	draw();
 }
 

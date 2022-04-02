@@ -12,7 +12,9 @@
 #include "graphics.h"
 #include "controls.h"
 #define WINDOW_SIZE 480
-#define WINDOW_TITLE "Trails and Towers"
+#define WINDOW_TITLE_REGULAR "Trails"
+#define WINDOW_TITLE_FIRST_WIN "Blue win!"
+#define WINDOW_TITLE_SECOND_WIN "Red win!"
 extern GLFWwindow* window;
 extern bool windowHere;
 bool windowInit();

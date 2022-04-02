@@ -26,8 +26,7 @@ void hitKey(GLFWwindow* window, int key, int scan, int action, int mods)
 				direction = moveDirection::right;
 				break;
 			}
-			moveMake(direction);
+			moveMake(activePlayer, direction);
 		}
-
 	}
 }

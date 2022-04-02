@@ -2,8 +2,10 @@
 const int towerDistance = 1;
 unsigned short field[fieldSize][fieldSize];
 unsigned short lastCell[2][2] = { {0, 0}, {fieldSize - 1, fieldSize - 1} };
+moveDirection lastDirection[2] = { moveDirection::left,  moveDirection::right };
 unsigned short lastBoost[2] = { 0, 0 };
 bool activePlayer = PLAYER_FIRST;
+unsigned int movesCount = 0;
 
 void fieldInit()
 {
@@ -23,59 +25,91 @@ void fieldInit()
 	}
 }
 
-bool movePossible(bool player, moveDirection direction)
+bool stepPossible(bool player, moveDirection direction)
 {
 	if (direction == moveDirection::up)
 	{
 		if (lastCell[player][0] > 0)
-			if (field[lastCell[player][0] - 1][lastCell[player][1]] == 0)
+			if (field[lastCell[player][0] - 1][lastCell[player][1]] == 0 || lastBoost[player] > 0)
 				return true;
 	}
 	else if (direction == moveDirection::down)
 	{
 		if (lastCell[player][0] < fieldSize - 1)
-			if (field[lastCell[player][0] + 1][lastCell[player][1]] == 0)
+			if (field[lastCell[player][0] + 1][lastCell[player][1]] == 0 || lastBoost[player] > 0)
 				return true;
 	}
 	else if (direction == moveDirection::left)
 	{
 		if (lastCell[player][1] > 0)
-			if (field[lastCell[player][0]][lastCell[player][1] - 1] == 0)
+			if (field[lastCell[player][0]][lastCell[player][1] - 1] == 0 || lastBoost[player] > 0)
 				return true;
 	}
 	else if (direction == moveDirection::right)
 	{
 		if (lastCell[player][1] < fieldSize - 1)
-			if (field[lastCell[player][0]][lastCell[player][1] + 1] == 0)
+			if (field[lastCell[player][0]][lastCell[player][1] + 1] == 0 || lastBoost[player] > 0)
 				return true;
 	}
 	return false;
 }
 
-void moveMake(moveDirection direction)
+bool stepMake(bool player, moveDirection direction, bool boost)
 {
-	if (movePossible(activePlayer, direction))
+	if (stepPossible(player, direction))
 	{
 		if (direction == moveDirection::up)
 		{
-			field[lastCell[activePlayer][0] - 1][lastCell[activePlayer][1]] = activePlayer + 1;
-			lastCell[activePlayer][0]--;
+			if (field[lastCell[player][0] - 1][lastCell[player][1]] == 0)
+				field[lastCell[player][0] - 1][lastCell[player][1]] = player + 1;
+			lastCell[player][0]--;
 		}
 		else if (direction == moveDirection::down)
 		{
-			field[lastCell[activePlayer][0] + 1][lastCell[activePlayer][1]] = activePlayer + 1;
-			lastCell[activePlayer][0]++;
+			if (field[lastCell[player][0] + 1][lastCell[player][1]] == 0)
+				field[lastCell[player][0] + 1][lastCell[player][1]] = player + 1;
+			lastCell[player][0]++;
 		}
 		else if (direction == moveDirection::left)
 		{
-			field[lastCell[activePlayer][0]][lastCell[activePlayer][1] - 1] = activePlayer + 1;
-			lastCell[activePlayer][1]--;
+			if (field[lastCell[player][0]][lastCell[player][1] - 1] == 0)
+				field[lastCell[player][0]][lastCell[player][1] - 1] = player + 1;
+			lastCell[player][1]--;
 		}
 		else if (direction == moveDirection::right)
 		{
-			field[lastCell[activePlayer][0]][lastCell[activePlayer][1] + 1] = activePlayer + 1;
-			lastCell[activePlayer][1]++;
+			if (field[lastCell[player][0]][lastCell[player][1] + 1] == 0)
+				field[lastCell[player][0]][lastCell[player][1] + 1] = player + 1;
+			lastCell[player][1]++;
 		}
-		activePlayer = !activePlayer;
+
+		if (direction == lastDirection[player])
+		{
+			if (!boost)
+			{
+				lastBoost[player]++;
+
+				for (int i = 0; i < lastBoost[player]; i++)
+					if (!stepMake(player, direction, true))
+						lastBoost[player] = 0;
+			}
+		}
+		else
+			lastBoost[player] = 0;
+		lastDirection[player] = direction;
+		return true;
 	}
+	else
+		return false;
+}
+
+bool moveMake(bool player, moveDirection direction)
+{
+	if (stepMake(activePlayer, direction))
+	{
+		activePlayer = !activePlayer;
+		movesCount++;
+		return true;
+	}
+	return false;
 }
