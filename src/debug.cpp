@@ -1,4 +1,5 @@
 #include "debug.h"
+#include <iostream>
 
 void error(const char* message)
 {

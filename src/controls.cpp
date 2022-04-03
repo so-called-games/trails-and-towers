@@ -1,9 +1,18 @@
 #include "controls.h"
+#include "graphics.h"
+#include "logic.h"
 
 void hitKey(GLFWwindow* window, int key, int scan, int action, int mods)
 {
 	if (action == GLFW_RELEASE)
 	{
+		if (winState)
+		{
+			fieldInit();
+			draw();
+			return;
+		}
+
 		if (key == GLFW_KEY_UP || key == GLFW_KEY_W ||
 			key == GLFW_KEY_DOWN || key == GLFW_KEY_S ||
 			key == GLFW_KEY_LEFT || key == GLFW_KEY_A ||

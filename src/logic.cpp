@@ -1,35 +1,47 @@
 #include "logic.h"
-unsigned int fieldSize = 11;
-unsigned int towersCount = 3;
-unsigned int towersDistance = 1;
+#include "window.h"
+#include "graphics.h"
+#include <algorithm>
+#include <string>
+unsigned int fieldSize;
+unsigned int towersCount;
+unsigned int towersDistance;
 vector<vector<unsigned short>> field;
+unsigned int endCell;
 unsigned short lastCell[2][2];
 moveDirection lastDirection[2];
 unsigned short lastBoost[2];
 unsigned int towersTaken[2];
 bool activePlayer;
 unsigned int movesCount;
+bool winState;
 
 void fieldInit()
 {
+	winState = false;
+	showPossibleMoves = SHOW_POSSIBLE_MOVES;
+	fieldSize = FIELD_SIZE;
+	towersCount = TOWERS_COUNT;
+	towersDistance = TOWERS_DISTANCE;
+	windowSetTitle(WINDOW_TITLE_REGULAR);
+
 	if (fieldSize < 2)
 		fieldSize = 2;
 	field.clear();
 	field.resize(fieldSize, vector<unsigned short>(fieldSize, 0));
+	endCell = fieldSize - 1;
 	lastCell[0][0] = 0;
 	lastCell[0][1] = 0;
-	lastCell[1][0] = fieldSize - 1;
-	lastCell[1][1] = fieldSize - 1;
+	lastCell[1][0] = endCell;
+	lastCell[1][1] = endCell;
 	lastDirection[0] = moveDirection::left;
 	lastDirection[1] = moveDirection::right;
 	lastBoost[0] = 0;
 	lastBoost[1] = 0;
 	towersTaken[0] = 0;
 	towersTaken[1] = 0;
-	activePlayer = PLAYER_FIRST;
+	activePlayer = GOES_FIRST;
 	movesCount = 0;
-	field[0][0] = 1;
-	field[fieldSize - 1][fieldSize - 1] = 2;
 	bool isFieldEven = fieldSize % 2 == 0;
 	int towerCenter = fieldSize / 2, towerShift = 0;
 
@@ -43,7 +55,7 @@ void fieldInit()
 		if (towersCount % 2 == 0)
 			towerShift = towersDistance;
 	}
-	int towerAttractor = (isFieldEven ? towersDistance / 2 : (towersCount % 2 == 0 ? ceil((float)towersDistance / 2) - 1 : 0));
+	int towerAttractor = (isFieldEven ? towerCenter : (towersCount % 2 == 0 ? ceil((float)towersDistance / 2) - 1 : 0));
 
 	for (int t = (isFieldEven ? 1 : 0); t < ceil((float)towersCount / 2) + (isFieldEven ? 1 : 0); t++)
 	{
@@ -58,79 +70,129 @@ void fieldInit()
 		if (row >= 0 && row < fieldSize && column >= 0 && column < fieldSize)
 			field[row][column] = 3;
 	}
+	field[0][0] = 1;
+	field[endCell][endCell] = 2;
 }
 
 bool stepPossible(bool player, moveDirection direction)
 {
+	int requestedRow, requestedColumn;
+
 	if (direction == moveDirection::up)
 	{
-		if (lastCell[player][0] > 0)
-			if (field[lastCell[player][0] - 1][lastCell[player][1]] == 0 || lastBoost[player] > 0)
+		requestedRow = lastCell[player][0] - (direction == lastDirection[player] ? lastBoost[player] + 1 : 0) - 1;
+		requestedColumn = lastCell[player][1];
+
+		if (requestedRow >= 0)
+		{
+			if (field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3))
 				return true;
+		}
+		else if (field[0][requestedColumn] == 0)
+			return true;
 	}
 	else if (direction == moveDirection::down)
 	{
-		if (lastCell[player][0] < fieldSize - 1)
-			if (field[lastCell[player][0] + 1][lastCell[player][1]] == 0 || lastBoost[player] > 0)
+		requestedRow = lastCell[player][0] + (direction == lastDirection[player] ? lastBoost[player] + 1 : 0) + 1;
+		requestedColumn = lastCell[player][1];
+
+		if (requestedRow < fieldSize)
+		{
+			if (field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3))
 				return true;
+		}
+		else if (field[endCell][requestedColumn] == 0)
+			return true;
 	}
 	else if (direction == moveDirection::left)
 	{
-		if (lastCell[player][1] > 0)
-			if (field[lastCell[player][0]][lastCell[player][1] - 1] == 0 || lastBoost[player] > 0)
+		requestedRow = lastCell[player][0];
+		requestedColumn = lastCell[player][1] - (direction == lastDirection[player] ? lastBoost[player] + 1 : 0) - 1;
+
+		if (requestedColumn >= 0)
+		{
+			if (field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3))
 				return true;
+		}
+		else if (field[requestedRow][0] == 0)
+			return true;
 	}
 	else if (direction == moveDirection::right)
 	{
-		if (lastCell[player][1] < fieldSize - 1)
-			if (field[lastCell[player][0]][lastCell[player][1] + 1] == 0 || lastBoost[player] > 0)
+		requestedRow = lastCell[player][0];
+		requestedColumn = lastCell[player][1] + (direction == lastDirection[player] ? lastBoost[player] + 1 : 0) + 1;
+		
+		if (requestedColumn < fieldSize)
+		{
+			if (field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3))
 				return true;
+		}
+		else if (field[requestedRow][endCell] == 0)
+			return true;
 	}
 	return false;
 }
 
-bool stepMake(bool player, moveDirection direction, bool boost)
+bool stepMake(bool player, moveDirection direction)
 {
 	if (stepPossible(player, direction))
 	{
+		if (direction == lastDirection[player])
+			lastBoost[player]++;
+		else
+			lastBoost[player] = 0;
+
+		int row, column;
+
 		if (direction == moveDirection::up)
 		{
-			if (field[lastCell[player][0] - 1][lastCell[player][1]] == 0)
-				field[lastCell[player][0] - 1][lastCell[player][1]] = player + 1;
-			lastCell[player][0]--;
+			row = lastCell[player][0] - lastBoost[player] - 1;
+			column = lastCell[player][1];
 		}
 		else if (direction == moveDirection::down)
 		{
-			if (field[lastCell[player][0] + 1][lastCell[player][1]] == 0)
-				field[lastCell[player][0] + 1][lastCell[player][1]] = player + 1;
-			lastCell[player][0]++;
+			row = lastCell[player][0] + lastBoost[player] + 1;
+			column = lastCell[player][1];
 		}
 		else if (direction == moveDirection::left)
 		{
-			if (field[lastCell[player][0]][lastCell[player][1] - 1] == 0)
-				field[lastCell[player][0]][lastCell[player][1] - 1] = player + 1;
-			lastCell[player][1]--;
+			row = lastCell[player][0];
+			column = lastCell[player][1] - lastBoost[player] - 1;
 		}
 		else if (direction == moveDirection::right)
 		{
-			if (field[lastCell[player][0]][lastCell[player][1] + 1] == 0)
-				field[lastCell[player][0]][lastCell[player][1] + 1] = player + 1;
-			lastCell[player][1]++;
+			row = lastCell[player][0];
+			column = lastCell[player][1] + lastBoost[player] + 1;
 		}
+
+		if (row < 0)
+			row = 0;
+		else if (row > endCell)
+			row = endCell;
+
+		if (column < 0)
+			column = 0;
+		else if (column > endCell)
+			column = endCell;
 
 		if (direction == lastDirection[player])
 		{
-			if (!boost)
+			if (lastBoost[player] > 0)
 			{
-				lastBoost[player]++;
+				bool rowOrColumn = direction == moveDirection::up || direction == moveDirection::down;
+				int first = (rowOrColumn ? lastCell[player][0] + (direction == moveDirection::down ? 1 : -1) : lastCell[player][1] + (direction == moveDirection::right ? 1 : -1)), last = (rowOrColumn ? row : column);
 
-				for (int i = 0; i < lastBoost[player]; i++)
-					if (!stepMake(player, direction, true))
-						lastBoost[player] = 0;
+				for (int i = first; first <= last ? i < last : i > last; first <= last ? i++ : i--)
+					if (field[rowOrColumn ? i : row][rowOrColumn ? column : i] == 0)
+						field[rowOrColumn ? i : row][rowOrColumn ? column : i] = player + 1;
 			}
 		}
-		else
-			lastBoost[player] = 0;
+
+		if (field[row][column] == 3)
+			towersTaken[player]++;
+		field[row][column] = player + 1;
+		lastCell[player][0] = row;
+		lastCell[player][1] = column;
 		lastDirection[player] = direction;
 		return true;
 	}
@@ -138,13 +200,39 @@ bool stepMake(bool player, moveDirection direction, bool boost)
 		return false;
 }
 
-bool moveMake(bool player, moveDirection direction)
+void moveMake(bool player, moveDirection direction)
 {
-	if (stepMake(activePlayer, direction))
+	if (stepMake(player, direction))
 	{
-		activePlayer = !activePlayer;
 		movesCount++;
+
+		if (checkForWinOrLose(player))
+		{
+			draw();
+			return;
+		}
+		activePlayer = !player;
+		draw();
+	}
+}
+
+bool checkForWinOrLose(bool player)
+{
+	bool forTowers = player ? towersTaken[1] >= ceil((float)towersCount / 2) : towersTaken[0] >= ceil((float)towersCount / 2), forDeadEnds = !(stepPossible(player, moveDirection::up) || stepPossible(player, moveDirection::down) || stepPossible(player, moveDirection::left) || stepPossible(player, moveDirection::right));
+	bool win = forTowers, lose = forDeadEnds;
+
+	if (win || lose)
+	{
+		winState = true;
+		string title = (win || !lose) ? WINDOW_TITLE_FIRST_WIN : WINDOW_TITLE_SECOND_WIN;
+		title.append(" in ");
+		title.append(to_string(movesCount / 2 + (player != GOES_FIRST ? 1 : 0)));
+		title.append(" moves!");
+		windowSetTitle(title.c_str());
+		showLastCell = false;
+		showPossibleMoves = false;
 		return true;
 	}
-	return false;
+	else
+		return false;
 }

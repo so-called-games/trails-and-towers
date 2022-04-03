@@ -1,18 +1,33 @@
+#pragma comment (lib, "glu32.lib")
 #include "graphics.h"
-const float cellSize = 2.f / fieldSize;
-const float cellThickness = cellSize / 35.f;
-const float cellInnerSize = cellSize - 2 * cellThickness;
-bool flipRows = false;
-bool flipColumns = false;
-bool showPossibles = true;
+#include "window.h"
+#include <gl/glu.h>
+#include <GLFW/glfw3.h>
+float cellSize;
+float cellThickness;
+float cellInnerSize;
+const bool mindThicknessAdapt = true;
+bool showLastCell = true;
+bool showPossibleMoves = SHOW_POSSIBLE_MOVES;
 
 void drawInit()
 {
+	int windowWidth, windowHeight;
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+	cellResize((float)screenHeight / (windowWidth <= windowHeight ? windowWidth : windowHeight));
 	glfwWindowHint(GLFW_SAMPLES, 8);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-1.f - cellThickness, 1.f + cellThickness, -1.f - cellThickness, 1.f + cellThickness);
-	glClearColor(1.f, 1.f, 1.f, 1.f);
+	glClearColor(COLOR_FIELD_BACKGROUND, 1.f);
+	draw();
+}
+
+void cellResize(float thicknessMultiplier)
+{
+	cellSize = 2.f / fieldSize;
+	cellThickness = cellSize * GRID_THICKNESS * (mindThicknessAdapt ? thicknessMultiplier : 2.5f);
+	cellInnerSize = cellSize - 2 * cellThickness;
 }
 
 void draw()
@@ -25,7 +40,7 @@ void draw()
 void drawField()
 {
 	glBegin(GL_QUADS);
-	glColor3f(0.9f, 0.9f, 0.9f);
+	glColor3f(COLOR_FIELD_GRID);
 	glVertex2f(-1.f - cellThickness, 1.f + cellThickness);
 	glVertex2f(1.f + cellThickness, 1.f + cellThickness);
 	glVertex2f(1.f + cellThickness, -1.f - cellThickness);
@@ -35,23 +50,32 @@ void drawField()
 		for (int c = 0; c < fieldSize; c++)
 		{
 			if (field[r][c] == 1)
-				glColor3f(0.f, 0.f, 1.f);
+				glColor3f(COLOR_PLAYER_FIRST);
 			else if (field[r][c] == 2)
-				glColor3f(1.f, 0.f, 0.f);
+				glColor3f(COLOR_PLAYER_SECOND);
 			else if (field[r][c] == 3)
-				glColor3f(0.f, 0.f, 0.f);
+				glColor3f(COLOR_TOWER);
 			else
-				glColor3f(1.f, 1.f, 1.f);
+				glColor3f(COLOR_EMPTY_CELL);
 			drawCell(r, c);
 		}
 
-	if (showPossibles)
+	if (showLastCell)
 	{
-		glColor3f(0.f, 1.f, 0.f);
-		drawPossibles(moveDirection::up);
-		drawPossibles(moveDirection::down);
-		drawPossibles(moveDirection::left);
-		drawPossibles(moveDirection::right);
+		if (!activePlayer)
+			glColor3f(COLOR_FIRST_LAST_CELL);
+		else
+			glColor3f(COLOR_SECOND_LAST_CELL);
+		drawCell(lastCell[activePlayer][0], lastCell[activePlayer][1]);
+	}
+
+	if (showPossibleMoves)
+	{
+		glColor3f(COLOR_POSSIBLE_MOVE);
+		drawPossibleMoves(moveDirection::up);
+		drawPossibleMoves(moveDirection::down);
+		drawPossibleMoves(moveDirection::left);
+		drawPossibleMoves(moveDirection::right);
 	}
 	glEnd();
 }
@@ -69,7 +93,7 @@ void drawCell(int row, int column)
 	glVertex2f(-1.f + column * cellSize + cellThickness, 1.f - row * cellSize - cellInnerSize);
 }
 
-void drawPossibles(moveDirection direction)
+void drawPossibleMoves(moveDirection direction)
 {
 	if (stepPossible(activePlayer, direction))
 	{
@@ -102,10 +126,10 @@ void drawPossibles(moveDirection direction)
 			row = lastCell[activePlayer][0] + i * rowDirection;
 			column = lastCell[activePlayer][1] + i * columnDirection;
 
-			if (row < 0 || row > (fieldSize - 1) || column < 0 || column > (fieldSize - 1))
+			if (row < 0 || row > endCell || column < 0 || column > endCell)
 				break;
 
-			if (field[row][column] != 1 && field[row][column] != 2)
+			if (field[row][column] != 1 && field[row][column] != 2 && i < lastBoost[activePlayer] + 2)
 				drawCell(row, column);
 			i++;
 		} while (i <= lastBoost[activePlayer] + 2 && lastDirection[activePlayer] == direction);

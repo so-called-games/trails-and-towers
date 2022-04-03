@@ -1,8 +1,12 @@
 #pragma once
+#include "version.h"
 #include <vector>
-#include <algorithm>
-#define PLAYER_FIRST false
-#define PLAYER_SECOND true
+#define FIELD_SIZE 11
+#define TOWERS_COUNT 3
+#define TOWERS_DISTANCE 1
+#define GOES_FIRST FIRST_PLAYER
+#define FIRST_PLAYER false
+#define SECOND_PLAYER true
 using namespace std;
 enum class moveDirection
 {
@@ -10,12 +14,14 @@ enum class moveDirection
 };
 extern unsigned int fieldSize;
 extern vector<vector<unsigned short>> field;
+extern unsigned int endCell;
 extern unsigned short lastCell[2][2];
 extern moveDirection lastDirection[2];
 extern unsigned short lastBoost[2];
 extern bool activePlayer;
-extern unsigned int movesCount;
+extern bool winState;
 void fieldInit();
 bool stepPossible(bool player, moveDirection direction);
-bool stepMake(bool player, moveDirection direction, bool boost = false);
-bool moveMake(bool player, moveDirection direction);
+bool stepMake(bool player, moveDirection direction);
+void moveMake(bool player, moveDirection direction);
+bool checkForWinOrLose(bool player);

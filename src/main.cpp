@@ -5,12 +5,11 @@ int main(int argc, char* argv[])
 	if (!(windowHere = windowInit()))
 		windowQuit(PROGRAM_FAILURE);
 	windowSetup();
-	drawInit();
 	fieldInit();
+	drawInit();
 
 	while (!glfwWindowShouldClose(window))
 	{
-		draw();
 		glfwPollEvents();
 	}
 	windowQuit(PROGRAM_SUCCESS);

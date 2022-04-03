@@ -1,26 +1,19 @@
 #pragma once
-#pragma comment (lib, "glu32.lib")
 #include "version.h"
-#include "debug.h"
-#include "graphics.h"
-#include "controls.h"
-#ifdef BUILD_WINDOWS
-	#include "../res/resource.h"
-	#include <winuser.h>
-	#include <tchar.h>
-#endif
 #include <gl/glu.h>
 #include <GLFW/glfw3.h>
 #define WINDOW_SIZE 480
 #define WINDOW_TITLE_REGULAR "Trails"
-#define WINDOW_TITLE_FIRST_WIN "Blue wins!"
-#define WINDOW_TITLE_SECOND_WIN "Red wins!"
+#define WINDOW_TITLE_FIRST_WIN "Blue wins"
+#define WINDOW_TITLE_SECOND_WIN "Red wins"
 extern GLFWwindow* window;
+extern unsigned int screenWidth, screenHeight;
 extern bool windowHere;
 bool windowInit();
 void windowSetup();
+void windowSetTitle(const char* title);
 #ifdef BUILD_WINDOWS
-void windowIcon(int resource);
+void windowSetIcon(int resource);
 #endif
 void windowResize(GLFWwindow* window, int width, int height);
 void windowUpdate(GLFWwindow* window);

@@ -4,14 +4,14 @@
 #define VERSION_MINOR "@PROJECT_VERSION_MINOR@"
 #define VERSION_MAINTENANCE "@PROJECT_VERSION_PATCH@"
 #if defined(WIN32) || defined(_WIN32)
-	#define BUILD_WINDOWS
-	#include <windows.h>
+#define BUILD_WINDOWS
+#include <windows.h>
 #elif defined(__APPLE__) && defined(__MACH__)
-	#define BUILD_MACOSX
+#define BUILD_MACOSX
 #elif __linux__
-	#define BUILD_LINUX
+#define BUILD_LINUX
 #elif __unix__
-	#define BUILD_UNIX
+#define BUILD_UNIX
 #else
-	#define BUILD_UNKNOWN
+#define BUILD_UNKNOWN
 #endif

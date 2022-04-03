@@ -2,11 +2,10 @@
 #include "version.h"
 #include <chrono>
 #include <string>
-#include <iostream>
 #ifdef BUILD_WINDOWS
-	#define localtime(a, b) localtime_s(b, a)
+#define localtime(a, b) localtime_s(b, a)
 #elif defined(BUILD_LINUX) || defined(BUILD_UNIX)
-	#define localtime(a, b) localtime_r(a, b)
+#define localtime(a, b) localtime_r(a, b)
 #endif
 #define PROGRAM_SUCCESS 0
 #define PROGRAM_FAILURE -1
