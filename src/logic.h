@@ -1,14 +1,15 @@
 #pragma once
+#include <vector>
+#include <algorithm>
 #define PLAYER_FIRST false
 #define PLAYER_SECOND true
+using namespace std;
 enum class moveDirection
 {
 	up, down, left, right
 };
-const int fieldSize = 11;
-const int towersCount = 3;
-const int towersDistance = 1;
-extern unsigned short field[fieldSize][fieldSize];
+extern unsigned int fieldSize;
+extern vector<vector<unsigned short>> field;
 extern unsigned short lastCell[2][2];
 extern moveDirection lastDirection[2];
 extern unsigned short lastBoost[2];

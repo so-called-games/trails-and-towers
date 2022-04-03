@@ -1,27 +1,62 @@
 #include "logic.h"
-const int towerDistance = 1;
-unsigned short field[fieldSize][fieldSize];
-unsigned short lastCell[2][2] = { {0, 0}, {fieldSize - 1, fieldSize - 1} };
-moveDirection lastDirection[2] = { moveDirection::left,  moveDirection::right };
-unsigned short lastBoost[2] = { 0, 0 };
-bool activePlayer = PLAYER_FIRST;
-unsigned int movesCount = 0;
+unsigned int fieldSize = 11;
+unsigned int towersCount = 3;
+unsigned int towersDistance = 1;
+vector<vector<unsigned short>> field;
+unsigned short lastCell[2][2];
+moveDirection lastDirection[2];
+unsigned short lastBoost[2];
+unsigned int towersTaken[2];
+bool activePlayer;
+unsigned int movesCount;
 
 void fieldInit()
 {
-	for (int r = 0; r < fieldSize; r++)
+	if (fieldSize < 2)
+		fieldSize = 2;
+	field.clear();
+	field.resize(fieldSize, vector<unsigned short>(fieldSize, 0));
+	lastCell[0][0] = 0;
+	lastCell[0][1] = 0;
+	lastCell[1][0] = fieldSize - 1;
+	lastCell[1][1] = fieldSize - 1;
+	lastDirection[0] = moveDirection::left;
+	lastDirection[1] = moveDirection::right;
+	lastBoost[0] = 0;
+	lastBoost[1] = 0;
+	towersTaken[0] = 0;
+	towersTaken[1] = 0;
+	activePlayer = PLAYER_FIRST;
+	movesCount = 0;
+	field[0][0] = 1;
+	field[fieldSize - 1][fieldSize - 1] = 2;
+	bool isFieldEven = fieldSize % 2 == 0;
+	int towerCenter = fieldSize / 2, towerShift = 0;
+
+	if (isFieldEven)
 	{
-		for (int c = 0; c < fieldSize; c++)
-		{
-			if (r == 0 && c == 0)
-				field[r][c] = 1;
-			else if (r == fieldSize - 1 && c == fieldSize - 1)
-				field[r][c] = 2;
-			else if (r == fieldSize / 2 && c == fieldSize / 2)
-				field[r][c] = 3;
-			else
-				field[r][c] = 0;
-		}
+		if (towersCount % 2 != 0)
+			towersCount++;
+	}
+	else
+	{
+		if (towersCount % 2 == 0)
+			towerShift = towersDistance;
+	}
+	int towerAttractor = (isFieldEven ? towersDistance / 2 : (towersCount % 2 == 0 ? ceil((float)towersDistance / 2) - 1 : 0));
+
+	for (int t = (isFieldEven ? 1 : 0); t < ceil((float)towersCount / 2) + (isFieldEven ? 1 : 0); t++)
+	{
+		int row = towerCenter - towerShift - t * (towersDistance + 1) + towerAttractor;
+		int column = towerCenter + towerShift + t * (towersDistance + 1) - towerAttractor - (isFieldEven ? 1 : 0);
+
+		if (row >= 0 && row < fieldSize && column >= 0 && column < fieldSize)
+			field[row][column] = 3;
+		row = towerCenter + towerShift + t * (towersDistance + 1) - towerAttractor - (isFieldEven ? 1 : 0);
+		column = towerCenter - towerShift - t * (towersDistance + 1) + towerAttractor;
+
+		if (row >= 0 && row < fieldSize && column >= 0 && column < fieldSize)
+			field[row][column] = 3;
 	}
 }
 

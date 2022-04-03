@@ -4,4 +4,6 @@
 #endif
 #include "debug.h"
 #include "window.h"
+#include "graphics.h"
 #include "logic.h"
+#include <GLFW/glfw3.h>

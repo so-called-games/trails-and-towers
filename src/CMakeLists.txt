@@ -8,13 +8,12 @@ endif()
 configure_file("version.h.in" "version.h")
 add_executable (${PROJECT_NAME}
 	"main.cpp"
-	"time.cpp"
 	"debug.cpp"
 	"window.cpp"
 	"graphics.cpp"
 	"controls.cpp"
-	"settings.cpp"
-	"logic.cpp")
+	"logic.cpp"
+	"time.cpp")
 
 if (WIN32)
 	target_sources(${PROJECT_NAME} PRIVATE

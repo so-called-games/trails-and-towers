@@ -14,19 +14,24 @@ void hitKey(GLFWwindow* window, int key, int scan, int action, int mods)
 			switch (key)
 			{
 			case GLFW_KEY_UP: case GLFW_KEY_W:
-				direction = moveDirection::up;
+				direction = flipRows ? moveDirection::down : moveDirection::up;
 				break;
 			case GLFW_KEY_DOWN: case GLFW_KEY_S:
-				direction = moveDirection::down;
+				direction = flipRows ? moveDirection::up : moveDirection::down;
 				break;
 			case GLFW_KEY_LEFT: case GLFW_KEY_A:
-				direction = moveDirection::left;
+				direction = flipColumns ? moveDirection::right : moveDirection::left;
 				break;
 			case GLFW_KEY_RIGHT: case GLFW_KEY_D:
-				direction = moveDirection::right;
+				direction = flipColumns ? moveDirection::left : moveDirection::right;
 				break;
 			}
 			moveMake(activePlayer, direction);
 		}
 	}
+}
+
+void hitMouseButton(GLFWwindow* window, int button, int action, int mods)
+{
+	
 }

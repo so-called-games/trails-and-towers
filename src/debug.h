@@ -1,8 +1,8 @@
 #pragma once
 #include "version.h"
-#include <iostream>
-#include <string>
 #include <chrono>
+#include <string>
+#include <iostream>
 #ifdef BUILD_WINDOWS
 	#define localtime(a, b) localtime_s(b, a)
 #elif defined(BUILD_LINUX) || defined(BUILD_UNIX)

@@ -3,10 +3,11 @@
 #include <chrono>
 #include <functional>
 using namespace std;
+using namespace chrono;
 
 class Timer
 {
 public:
     Timer();
-    void add(chrono::milliseconds delay, function<void()> callback);
+    void add(milliseconds delay, function<void()> callback);
 };

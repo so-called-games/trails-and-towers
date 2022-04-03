@@ -32,6 +32,7 @@ void windowSetup()
 		glfwSetWindowRefreshCallback(window, windowUpdate);
 		glfwSetWindowSizeCallback(window, windowResize);
 		glfwSetKeyCallback(window, hitKey);
+		glfwSetMouseButtonCallback(window, hitMouseButton);
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 }

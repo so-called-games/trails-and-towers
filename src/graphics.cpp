@@ -2,11 +2,15 @@
 const float cellSize = 2.f / fieldSize;
 const float cellThickness = cellSize / 35.f;
 const float cellInnerSize = cellSize - 2 * cellThickness;
+bool flipRows = false;
+bool flipColumns = false;
 bool showPossibles = true;
 
 void drawInit()
 {
 	glfwWindowHint(GLFW_SAMPLES, 8);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	gluOrtho2D(-1.f - cellThickness, 1.f + cellThickness, -1.f - cellThickness, 1.f + cellThickness);
 	glClearColor(1.f, 1.f, 1.f, 1.f);
 }
@@ -54,6 +58,11 @@ void drawField()
 
 void drawCell(int row, int column)
 {
+	if (flipRows)
+		row = fieldSize - row - 1;
+
+	if (flipColumns)
+		column = fieldSize - column - 1;
 	glVertex2f(-1.f + column * cellSize + cellThickness, 1.f - row * cellSize - cellThickness);
 	glVertex2f(-1.f + column * cellSize + cellInnerSize, 1.f - row * cellSize - cellThickness);
 	glVertex2f(-1.f + column * cellSize + cellInnerSize, 1.f - row * cellSize - cellInnerSize);

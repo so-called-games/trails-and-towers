@@ -2,6 +2,8 @@
 #pragma comment (lib, "glu32.lib")
 #include "version.h"
 #include "debug.h"
+#include "graphics.h"
+#include "controls.h"
 #ifdef BUILD_WINDOWS
 	#include "../res/resource.h"
 	#include <winuser.h>
@@ -9,8 +11,6 @@
 #endif
 #include <gl/glu.h>
 #include <GLFW/glfw3.h>
-#include "graphics.h"
-#include "controls.h"
 #define WINDOW_SIZE 480
 #define WINDOW_TITLE_REGULAR "Trails"
 #define WINDOW_TITLE_FIRST_WIN "Blue wins!"

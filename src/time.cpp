@@ -2,7 +2,7 @@
 
 Timer::Timer() {}
 
-void Timer::add(chrono::milliseconds delay, function<void()> callback)
+void Timer::add(milliseconds delay, function<void()> callback)
 {
     thread([=]()
         {
