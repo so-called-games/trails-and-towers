@@ -10,6 +10,7 @@
 #endif
 GLFWwindow* window;
 unsigned int screenWidth, screenHeight;
+int windowWidth, windowHeight;
 bool windowHere = false;
 const int minWindowSize = 240;
 
@@ -32,6 +33,7 @@ bool windowInit()
 	screenWidth = videoMode->width;
 	screenHeight = videoMode->height;
 	glfwMakeContextCurrent(window);
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
 	return true;
 }
 
@@ -68,6 +70,9 @@ void windowSetTitle(const char* title)
 
 void windowResize(GLFWwindow* window, int width, int height)
 {
+	windowWidth = width;
+	windowHeight = height;
+
 	if (height == 0)
 		height = 1;
 	float sizeRatio = (float)width / height;

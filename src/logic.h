@@ -10,7 +10,7 @@
 using namespace std;
 enum class moveDirection
 {
-	up, down, left, right
+	none, up, down, left, right
 };
 extern unsigned int fieldSize;
 extern vector<vector<unsigned short>> field;
@@ -21,6 +21,7 @@ extern unsigned short lastBoost[2];
 extern bool activePlayer;
 extern bool winState;
 void fieldInit();
+moveDirection getMoveDirectionByTarget(bool player, unsigned int requestedRow, unsigned int requestedColumn);
 bool stepPossible(bool player, moveDirection direction);
 bool stepMake(bool player, moveDirection direction);
 void moveMake(bool player, moveDirection direction);

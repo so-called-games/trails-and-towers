@@ -11,6 +11,7 @@
 #define COLOR_SECOND_LAST_CELL 0.5f, 0.f, 0.f
 #define COLOR_POSSIBLE_MOVE 0.f, 1.f, 0.f
 #define SHOW_POSSIBLE_MOVES true
+extern float cellSize;
 extern float cellThickness;
 const bool flipRows = false;
 const bool flipColumns = false;

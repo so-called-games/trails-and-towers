@@ -8,6 +8,7 @@
 #define WINDOW_TITLE_SECOND_WIN "Red wins"
 extern GLFWwindow* window;
 extern unsigned int screenWidth, screenHeight;
+extern int windowWidth, windowHeight;
 extern bool windowHere;
 bool windowInit();
 void windowSetup();

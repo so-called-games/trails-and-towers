@@ -19,6 +19,7 @@ bool winState;
 void fieldInit()
 {
 	winState = false;
+	showLastCell = true;
 	showPossibleMoves = SHOW_POSSIBLE_MOVES;
 	fieldSize = FIELD_SIZE;
 	towersCount = TOWERS_COUNT;
@@ -74,8 +75,35 @@ void fieldInit()
 	field[endCell][endCell] = 2;
 }
 
+moveDirection getMoveDirectionByTarget(bool player, unsigned int requestedRow, unsigned int requestedColumn)
+{
+	if (lastCell[player][0] == requestedRow || lastCell[player][1] == requestedColumn)
+	{
+		moveDirection direction = moveDirection::none;
+
+		if (lastCell[player][0] != requestedRow)
+		{
+			if (requestedRow < lastCell[player][0])
+				direction = moveDirection::up;
+			else if (requestedRow > lastCell[player][0])
+				direction = moveDirection::down;
+		}
+		else if (lastCell[player][1] != requestedColumn)
+		{
+			if (requestedColumn < lastCell[player][1])
+				direction = moveDirection::left;
+			else if (requestedColumn > lastCell[player][1])
+				direction = moveDirection::right;
+		}
+		return direction;
+	}
+	return moveDirection::none;
+}
+
 bool stepPossible(bool player, moveDirection direction)
 {
+	if (direction == moveDirection::none)
+		return false;
 	int requestedRow, requestedColumn;
 
 	if (direction == moveDirection::up)
@@ -218,15 +246,16 @@ void moveMake(bool player, moveDirection direction)
 
 bool checkForWinOrLose(bool player)
 {
-	bool forTowers = player ? towersTaken[1] >= ceil((float)towersCount / 2) : towersTaken[0] >= ceil((float)towersCount / 2), forDeadEnds = !(stepPossible(player, moveDirection::up) || stepPossible(player, moveDirection::down) || stepPossible(player, moveDirection::left) || stepPossible(player, moveDirection::right));
+	bool forTowers = towersTaken[player] >= ceil((float)towersCount / 2);
+	bool forDeadEnds = !(stepPossible(player, moveDirection::up) || stepPossible(player, moveDirection::down) || stepPossible(player, moveDirection::left) || stepPossible(player, moveDirection::right));
 	bool win = forTowers, lose = forDeadEnds;
 
 	if (win || lose)
 	{
 		winState = true;
-		string title = (win || !lose) ? WINDOW_TITLE_FIRST_WIN : WINDOW_TITLE_SECOND_WIN;
+		string title = (player ? !(win || !lose) : (win || !lose)) ? WINDOW_TITLE_FIRST_WIN : WINDOW_TITLE_SECOND_WIN;
 		title.append(" in ");
-		title.append(to_string(movesCount / 2 + (player != GOES_FIRST ? 1 : 0)));
+		title.append(to_string(movesCount / 2 + (!player && win ? 1 : 0)));
 		title.append(" moves!");
 		windowSetTitle(title.c_str());
 		showLastCell = false;

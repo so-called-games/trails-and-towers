@@ -129,7 +129,7 @@ void drawPossibleMoves(moveDirection direction)
 			if (row < 0 || row > endCell || column < 0 || column > endCell)
 				break;
 
-			if (field[row][column] != 1 && field[row][column] != 2 && i < lastBoost[activePlayer] + 2)
+			if (field[row][column] != 1 && field[row][column] != 2 && i <= lastBoost[activePlayer] + 2)
 				drawCell(row, column);
 			i++;
 		} while (i <= lastBoost[activePlayer] + 2 && lastDirection[activePlayer] == direction);
