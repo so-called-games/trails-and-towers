@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "version.h"
 #if !defined(VERSION_DEBUG) && defined(BUILD_WINDOWS)
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #endif
