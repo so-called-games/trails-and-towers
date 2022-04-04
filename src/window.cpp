@@ -12,7 +12,7 @@ GLFWwindow* window;
 unsigned int screenWidth, screenHeight;
 int windowWidth, windowHeight;
 bool windowHere = false;
-const int minWindowSize = 240;
+const int minWindowSize = WINDOW_MINIMAL_SIZE;
 
 bool windowInit()
 {
@@ -21,7 +21,7 @@ bool windowInit()
 		error(ERROR_GLFW_INIT);
 		return false;
 	}
-	window = glfwCreateWindow(WINDOW_SIZE, WINDOW_SIZE, WINDOW_TITLE_REGULAR, NULL, NULL);
+	window = glfwCreateWindow(WINDOW_DEFAULT_SIZE, WINDOW_DEFAULT_SIZE, WINDOW_TITLE_REGULAR, NULL, NULL);
 
 	if (!window)
 	{
@@ -51,6 +51,8 @@ void windowSetup()
 		glfwSetMouseButtonCallback(window, hitMouseButton);
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
+	else
+		warning(WARNING_WINDOW_SETUP);
 }
 
 void windowSetTitle(const char* title)

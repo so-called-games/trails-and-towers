@@ -12,8 +12,7 @@ add_executable (${PROJECT_NAME}
 	"window.cpp"
 	"graphics.cpp"
 	"controls.cpp"
-	"logic.cpp"
-	"time.cpp")
+	"logic.cpp")
 
 if (WIN32)
 	target_sources(${PROJECT_NAME} PRIVATE

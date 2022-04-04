@@ -1,4 +1,5 @@
 #include "logic.h"
+#include "debug.h"
 #include "window.h"
 #include "graphics.h"
 #include <algorithm>
@@ -27,7 +28,10 @@ void fieldInit()
 	windowSetTitle(WINDOW_TITLE_REGULAR);
 
 	if (fieldSize < 2)
+	{
+		warning(WARNING_FIELD_SIZE);
 		fieldSize = 2;
+	}
 	field.clear();
 	field.resize(fieldSize, vector<unsigned short>(fieldSize, 0));
 	endCell = fieldSize - 1;
@@ -49,7 +53,10 @@ void fieldInit()
 	if (isFieldEven)
 	{
 		if (towersCount % 2 != 0)
+		{
+			warning(WARNING_TOWERS_COUNT);
 			towersCount++;
+		}
 	}
 	else
 	{
@@ -170,7 +177,7 @@ bool stepMake(bool player, moveDirection direction)
 		else
 			lastBoost[player] = 0;
 
-		int row, column;
+		int row = 0, column = 0;
 
 		if (direction == moveDirection::up)
 		{
@@ -247,15 +254,16 @@ void moveMake(bool player, moveDirection direction)
 bool checkForWinOrLose(bool player)
 {
 	bool forTowers = towersTaken[player] >= ceil((float)towersCount / 2);
-	bool forDeadEnds = !(stepPossible(player, moveDirection::up) || stepPossible(player, moveDirection::down) || stepPossible(player, moveDirection::left) || stepPossible(player, moveDirection::right));
-	bool win = forTowers, lose = forDeadEnds;
+	bool forDeadEndOnOpponent = !(stepPossible(!player, moveDirection::up) || stepPossible(!player, moveDirection::down) || stepPossible(!player, moveDirection::left) || stepPossible(!player, moveDirection::right));
+	bool forDeadEndOnMyself = !(stepPossible(player, moveDirection::up) || stepPossible(player, moveDirection::down) || stepPossible(player, moveDirection::left) || stepPossible(player, moveDirection::right));
+	bool win = forTowers || forDeadEndOnOpponent, lose = forDeadEndOnMyself;
 
 	if (win || lose)
 	{
 		winState = true;
 		string title = (player ? !(win || !lose) : (win || !lose)) ? WINDOW_TITLE_FIRST_WIN : WINDOW_TITLE_SECOND_WIN;
 		title.append(" in ");
-		title.append(to_string(movesCount / 2 + (!player && win ? 1 : 0)));
+		title.append(to_string(movesCount / 2 + ((!player != GOES_FIRST) && win ? 1 : 0)));
 		title.append(" moves!");
 		windowSetTitle(title.c_str());
 		showLastCell = false;
