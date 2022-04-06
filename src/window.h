@@ -1,6 +1,6 @@
 #pragma once
 #include "version.h"
-#include <gl/glu.h>
+#include <GL/glu.h>
 #include <GLFW/glfw3.h>
 #define WINDOW_DEFAULT_SIZE 480
 #define WINDOW_MINIMAL_SIZE 160

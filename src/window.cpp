@@ -1,4 +1,3 @@
-#pragma comment (lib, "glu32.lib")
 #include "window.h"
 #include "debug.h"
 #include "graphics.h"

@@ -2,6 +2,7 @@
 #include "debug.h"
 #include "window.h"
 #include "graphics.h"
+#include <cmath>
 #include <algorithm>
 #include <string>
 unsigned int fieldSize;

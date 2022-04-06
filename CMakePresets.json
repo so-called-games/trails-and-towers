@@ -4,9 +4,9 @@
     {
       "name": "base",
       "hidden": true,
-      "generator": "Ninja",
       "binaryDir": "${sourceDir}/bin/${presetName}",
-      "installDir": "${sourceDir}/bin/install/${presetName}"
+      "installDir": "${sourceDir}/bin/install/${presetName}",
+      "generator": "Ninja"
     },
     {
       "name": "windows-base",

@@ -2,6 +2,7 @@
 #include "window.h"
 #include "graphics.h"
 #include "logic.h"
+#include <cmath>
 
 void hitKey(GLFWwindow* window, int key, int scan, int action, int mods)
 {

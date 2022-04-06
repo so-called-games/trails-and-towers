@@ -1,7 +1,6 @@
-#pragma comment (lib, "glu32.lib")
 #include "graphics.h"
 #include "window.h"
-#include <gl/glu.h>
+#include <GL/glu.h>
 #include <GLFW/glfw3.h>
 float cellSize;
 float cellThickness;
