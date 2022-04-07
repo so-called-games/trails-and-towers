@@ -1,4 +1,6 @@
+// This file include methods that handle mouse and keyboard events.
 #include "controls.h"
+#include "debug.h"
 #include "window.h"
 #include "graphics.h"
 #include "logic.h"
@@ -8,6 +10,10 @@ void hitKey(GLFWwindow* window, int key, int scan, int action, int mods)
 {
 	if (action == GLFW_RELEASE)
 	{
+		if (key == GLFW_KEY_ESCAPE)
+			windowQuit(PROGRAM_SUCCESS);
+
+		// Restart the game by hitting any key after one of the players won.
 		if (winState)
 		{
 			fieldInit();
@@ -22,6 +28,7 @@ void hitKey(GLFWwindow* window, int key, int scan, int action, int mods)
 		{
 			moveDirection direction;
 
+			// Associate specific key with move direction and try to move in it.
 			switch (key)
 			{
 			case GLFW_KEY_UP: case GLFW_KEY_W:
@@ -46,20 +53,24 @@ void hitMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
 	if (action == GLFW_RELEASE)
 	{
+		// Same as for the keys.
 		if (winState)
 		{
 			fieldInit();
 			draw();
 			return;
 		}
+		// This is to identify, what exact cell on the field is being clicked.
 		double xPosition, yPosition;
 		glfwGetCursorPos(window, &xPosition, &yPosition);
 		bool isWidthOrHeightLarger = windowWidth >= windowHeight;
 		double shiftPosition = (isWidthOrHeightLarger ? windowWidth - windowHeight : windowHeight - windowWidth) / 2.f;
+		/* Position shifting is useful when window aspect ratio isn't square.
+		 * Next long line determines which row and column is being clicked by dividing X and Y position of the cursor on a width and height of the window.
+		 * If you then divide each of this values by calculated cell size (which depends on field size), you can get exact clicked row and column. */
 		unsigned int clickedRow = floor((yPosition - (isWidthOrHeightLarger ? 0 : shiftPosition)) / (isWidthOrHeightLarger ? windowHeight : windowWidth) / (cellSize / 2)), clickedColumn = floor((xPosition - (isWidthOrHeightLarger ? shiftPosition : 0)) / (isWidthOrHeightLarger ? windowHeight : windowWidth) / (cellSize / 2));
+		// Check if one of the possible move directions from last occupied cell is on a clicked row or column and try to move in that direction.
 		moveDirection direction = getMoveDirectionByTarget(activePlayer, clickedRow, clickedColumn);
-
-		if (stepPossible(activePlayer, direction))
-			moveMake(activePlayer, direction);
+		moveMake(activePlayer, direction);
 	}
 }

@@ -1,6 +1,8 @@
+// This file includes methods useful for debugging.
 #include "debug.h"
 #include <iostream>
 
+// Notice that error and warning handlers using different output stream.
 void error(const char* message)
 {
 	cerr << timestamp() << message << endl;
@@ -11,6 +13,7 @@ void warning(const char* message)
 	clog << timestamp() << message << endl;
 }
 
+// This method returns timestamp in chosen format. Separators between date and time can be specified.
 string timestamp(const char format[6])
 {
 	char beginDelimiter = format[0],
