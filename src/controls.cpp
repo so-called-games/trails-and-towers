@@ -13,8 +13,8 @@ void hitKey(GLFWwindow* window, int key, int scan, int action, int mods)
 		if (key == GLFW_KEY_ESCAPE)
 			windowQuit(PROGRAM_SUCCESS);
 
-		// Restart the game by hitting any key after one of the players won.
-		if (winState)
+		// Restart the game by hitting R or any key after one of the players won.
+		if (winState || key == GLFW_KEY_R)
 		{
 			fieldInit();
 			draw();
