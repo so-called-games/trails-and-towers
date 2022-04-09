@@ -1,4 +1,4 @@
-// This file includes methods that operate with logic of the game.
+// This file includes methods that operates logic of the game.
 #include "logic.h"
 #include "debug.h"
 #include "window.h"
@@ -54,7 +54,7 @@ void fieldInit()
 	bool isFieldEven = fieldSize % 2 == 0;
 	int towerCenter = fieldSize / 2, towerShift = 0;
 
-	// Towers can be placed differently depending on parity of field size and towers count.
+	// Towers can be placed differently depending on parity of field size and on a towers count.
 	if (isFieldEven)
 	{
 		// However, there is no way to place odd amount of towers symmetrically on the field of even size, so count of the towers must be increased by one to be even.
@@ -69,7 +69,7 @@ void fieldInit()
 		if (towersCount % 2 == 0)
 			towerShift = towersDistance;
 	}
-	// This was a pretty hard part so I don't remember what exactly everything does here (it places the towers).
+	// This was a pretty hard part so I don't remember what exactly everything does here (so it places towers).
 	int towerAttractor = (isFieldEven ? towerCenter : (towersCount % 2 == 0 ? ceil((float)towersDistance / 2) - 1 : 0));
 
 	for (int t = (isFieldEven ? 1 : 0); t < ceil((float)towersCount / 2) + (isFieldEven ? 1 : 0); t++)
@@ -91,12 +91,12 @@ void fieldInit()
 
 moveDirection getMoveDirectionByTarget(bool player, unsigned int requestedRow, unsigned int requestedColumn)
 {
-	// Cell requested by player must be on a one row or column with last occupied cell.
+	// Cell requested by player must be on a one row or column with a last occupied cell.
 	if (lastCell[player][0] == requestedRow || lastCell[player][1] == requestedColumn)
 	{
 		moveDirection direction = moveDirection::none;
 
-		// Is requsted cell higher or lower than the last cell?
+		// Is requsted cell higher or lower than a last cell?
 		if (lastCell[player][0] != requestedRow)
 		{
 			if (requestedRow < lastCell[player][0])
@@ -104,7 +104,7 @@ moveDirection getMoveDirectionByTarget(bool player, unsigned int requestedRow, u
 			else if (requestedRow > lastCell[player][0])
 				direction = moveDirection::down;
 		}
-		// Or more to the left or right than the last cell?
+		// Or more to the left or right than a last cell?
 		else if (lastCell[player][1] != requestedColumn)
 		{
 			if (requestedColumn < lastCell[player][1])
@@ -119,7 +119,7 @@ moveDirection getMoveDirectionByTarget(bool player, unsigned int requestedRow, u
 
 bool stepPossible(bool player, moveDirection direction)
 {
-	// This condition is used for example when unreachable cell was clicked.
+	// This condition is used for example when an unreachable cell was clicked.
 	if (direction == moveDirection::none)
 		return false;
 	int requestedRow, requestedColumn;
@@ -214,7 +214,7 @@ bool stepMake(bool player, moveDirection direction)
 			column = lastCell[player][1] + lastBoost[player] + 1;
 		}
 
-		// He can't get over the field.
+		// Player can't get over the field.
 		if (row < 0)
 			row = 0;
 		else if (row > endCell)
@@ -230,17 +230,17 @@ bool stepMake(bool player, moveDirection direction)
 			if (lastBoost[player] > 0)
 			{
 				bool rowOrColumn = direction == moveDirection::up || direction == moveDirection::down;
-				// Define origin and target cells.
+				// Define an origin and a target cells.
 				int first = (rowOrColumn ? lastCell[player][0] + (direction == moveDirection::down ? 1 : -1) : lastCell[player][1] + (direction == moveDirection::right ? 1 : -1)), last = (rowOrColumn ? row : column);
 
-				// Occupy every free cell between origin and target ones.
+				// Occupy every free cell between an origin and a target ones.
 				for (int i = first; first <= last ? i < last : i > last; first <= last ? i++ : i--)
 					if (field[rowOrColumn ? i : row][rowOrColumn ? column : i] == 0)
 						field[rowOrColumn ? i : row][rowOrColumn ? column : i] = player + 1;
 			}
 		}
 
-		// If player hits target cell with boost and there is a tower, he takes it.
+		// If player hits target cell with boost and there is a tower, player takes it.
 		if (field[row][column] == 3)
 			towersTaken[player]++;
 		field[row][column] = player + 1;

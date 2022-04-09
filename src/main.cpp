@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 	// If everything is OK, let player do some actions.
 	while (!glfwWindowShouldClose(window))
 	{
-		// As game doesn't use any animation between players turns, it renders only after ones.
+		// As the game doesn't use any animation between players turns, it renders only after ones.
 		glfwPollEvents();
 	}
 	windowQuit(PROGRAM_SUCCESS);

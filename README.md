@@ -5,7 +5,7 @@ Trails and Towers (or Trails) is a mathematical game for two players. The player
 This is a cross-platform C++ implementation of that mathematical game based on [GLFW library](https://github.com/glfw/glfw). Now it is available for Windows and Linux (last requires [additional libraries](http://trails.sogamestudios.com/linux-guide)). See download options on [game's website](http://trails.sogamestudios.com/download).
 
 ## Controls
-Use arrow or WASD keys to choose move direction, or click on the target cell with mouse (click on a general move direction will also work). Game will show possible cells to move to as a green ones. Use Escape to quit the game and R to restart the game.
+Use arrow or WASD keys to choose move direction, or click on the target cell with mouse (click on a general move direction will also work). Possible cells to move to will be shown as a green ones. Use Escape to quit the game and R to restart the game.
 
 ## Rules
 Classic version of Trails and Towers has three towers on diagonal distance of one and 11x11 field. As being said, player's objective is to take as many towers as possible. Therefore, first player which takes more than a half of towers, wins. Player loses if none move can be done in player's turn.

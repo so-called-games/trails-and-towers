@@ -6,7 +6,7 @@
 float cellSize;
 float cellThickness;
 float cellInnerSize;
-// This sets if grid thickness needed to be the same when window is resized.
+// This sets if grid thickness needed to be the same when window was resized.
 const bool mindThicknessAdapt = true;
 bool showLastCell = true;
 bool showPossibleMoves = SHOW_POSSIBLE_MOVES;
@@ -27,7 +27,7 @@ void drawInit()
 	draw();
 }
 
-// This method updates size of the cells and grid if it is needed, for example when window was resized.
+// This method updates size of the cells and grid if it's neccessary, for example when window was resized.
 void cellResize(float thicknessMultiplier)
 {
 	cellSize = 2.f / fieldSize;
@@ -46,8 +46,8 @@ void drawField()
 {
 	glBegin(GL_QUADS);
 	glColor3f(COLOR_FIELD_GRID);
-	/* Draw field backing.
-	 * You can notice that the grid isn't actually the "grid", it's a square which drawn below the field,
+	/* Draw field background.
+	 * You can notice that the grid isn't actually "grid", it's a square which drawn below the field,
 	 * and cells itself appear to be a little smaller to make effect like there is a grid. */
 	glVertex2f(-1.f - cellThickness, 1.f + cellThickness);
 	glVertex2f(1.f + cellThickness, 1.f + cellThickness);
@@ -113,7 +113,7 @@ void drawPossibleMoves(moveDirection direction)
 	{
 		int rowDirection = 0, columnDirection = 0;
 
-		// It is easier to define some add and subtract values and then assign row and column ones than assign it for every direction.
+		// It's easier to define some add and subtract values and then assign row and column ones than assign it for every direction.
 		if (direction == moveDirection::up)
 		{
 			rowDirection = -1;

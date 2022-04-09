@@ -5,7 +5,7 @@
 #include "controls.h"
 // <iostream> is needed to output GLFW errors.
 #include <iostream>
-// Import resource and some other headers to change an app icon on Windows.
+// Import resource and some other headers to change game icon on Windows.
 #ifdef BUILD_WINDOWS
 #include "../res/resource.h"
 #include <winuser.h>

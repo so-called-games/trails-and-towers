@@ -1,4 +1,4 @@
-// This file include methods that handle mouse and keyboard events.
+// This file includes methods that handles mouse and keyboard events.
 #include "controls.h"
 #include "debug.h"
 #include "window.h"
@@ -28,7 +28,7 @@ void hitKey(GLFWwindow* window, int key, int scan, int action, int mods)
 		{
 			moveDirection direction;
 
-			// Associate specific key with move direction and try to move in it.
+			// Associate specific key with move direction and try to move at this direction.
 			switch (key)
 			{
 			case GLFW_KEY_UP: case GLFW_KEY_W:
