@@ -79,8 +79,10 @@ void fieldInit()
 
 		if (row >= 0 && row < fieldSize && column >= 0 && column < fieldSize)
 			field[row][column] = 3;
-		row = towerCenter + towerShift + t * (towersDistance + 1) - towerAttractor - (isFieldEven ? 1 : 0);
-		column = towerCenter - towerShift - t * (towersDistance + 1) + towerAttractor;
+		// This is to swap previously calculated index of a row and a column.
+		int toSwap = row;
+		row = column;
+		column = toSwap;
 
 		if (row >= 0 && row < fieldSize && column >= 0 && column < fieldSize)
 			field[row][column] = 3;
@@ -101,7 +103,7 @@ moveDirection getMoveDirectionByTarget(bool player, unsigned int requestedRow, u
 		{
 			if (requestedRow < lastCell[player][0])
 				direction = moveDirection::up;
-			else if (requestedRow > lastCell[player][0])
+			else
 				direction = moveDirection::down;
 		}
 		// Or more to the left or right than a last cell?
@@ -109,7 +111,7 @@ moveDirection getMoveDirectionByTarget(bool player, unsigned int requestedRow, u
 		{
 			if (requestedColumn < lastCell[player][1])
 				direction = moveDirection::left;
-			else if (requestedColumn > lastCell[player][1])
+			else
 				direction = moveDirection::right;
 		}
 		return direction;
@@ -131,12 +133,9 @@ bool stepPossible(bool player, moveDirection direction)
 		requestedColumn = lastCell[player][1];
 
 		if (requestedRow >= 0)
-		{
-			if (field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3))
-				return true;
-		}
-		else if (field[0][requestedColumn] == 0)
-			return true;
+			return field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3);
+		else
+			return field[0][requestedColumn] == 0;
 	}
 	else if (direction == moveDirection::down)
 	{
@@ -144,12 +143,9 @@ bool stepPossible(bool player, moveDirection direction)
 		requestedColumn = lastCell[player][1];
 
 		if (requestedRow < fieldSize)
-		{
-			if (field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3))
-				return true;
-		}
-		else if (field[endCell][requestedColumn] == 0)
-			return true;
+			return field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3);
+		else
+			return field[endCell][requestedColumn] == 0;
 	}
 	else if (direction == moveDirection::left)
 	{
@@ -157,12 +153,9 @@ bool stepPossible(bool player, moveDirection direction)
 		requestedColumn = lastCell[player][1] - (direction == lastDirection[player] ? lastBoost[player] + 1 : 0) - 1;
 
 		if (requestedColumn >= 0)
-		{
-			if (field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3))
-				return true;
-		}
-		else if (field[requestedRow][0] == 0)
-			return true;
+			return field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3);
+		else
+			return field[requestedRow][0] == 0;
 	}
 	else if (direction == moveDirection::right)
 	{
@@ -170,12 +163,9 @@ bool stepPossible(bool player, moveDirection direction)
 		requestedColumn = lastCell[player][1] + (direction == lastDirection[player] ? lastBoost[player] + 1 : 0) + 1;
 		
 		if (requestedColumn < fieldSize)
-		{
-			if (field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3))
-				return true;
-		}
-		else if (field[requestedRow][endCell] == 0)
-			return true;
+			return field[requestedRow][requestedColumn] == 0 || (direction == lastDirection[player] && field[requestedRow][requestedColumn] == 3);
+		else
+			return field[requestedRow][endCell] == 0;
 	}
 	return false;
 }
