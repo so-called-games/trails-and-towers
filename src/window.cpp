@@ -42,6 +42,7 @@ bool windowInit()
 	screenHeight = videoMode->height;
 	glfwMakeContextCurrent(window);
 	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+	glfwSetWindowPos(window, (screenWidth - windowWidth) / 2, (screenHeight - windowHeight) / 2);
 	return true;
 }
 
