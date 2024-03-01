@@ -1,8 +1,8 @@
 ﻿/********************************************************************************
- * Trails and Towers - http://trails.sogamestudios.com
+ * Trails and Towers - http://trails.so-called.games
  * Cross-platform mathematical game
  * ------------------------------------------------------------------------------
- * Copyright (c) 2022 So. Game Studios
+ * Copyright (c) 2022 So-called Games!
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
